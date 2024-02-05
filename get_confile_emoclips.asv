@@ -1,0 +1,66 @@
+
+close all; clearvars;
+
+%Set directory - location of .set file
+DIR = '/Users/katemccain/Documents/video_alpha/Pilot_Data_Logs';
+
+Subject_ID = 'JP_pilot';
+
+%List of subjects to process, based on the name of the folder that contains that subject's data
+RUN = {'run1', 'run2'};
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%Loop through each subject listed in SUB
+for i = 1:length(RUN)
+
+    temp = [];
+
+    %Define subject path based on study directory and subject ID of current subject
+    Subject_Path = ([DIR filesep Subject_ID filesep]);
+
+    %log files path in the folder
+    log_file_path = [Subject_Path 'logs' filesep RUN{i}];
+
+    % Create a search pattern for files ending with '.csv'
+    searchPattern = fullfile(log_file_path, '*.csv');
+    
+    % Use the dir function to get a list of files matching the search pattern
+    log_file = dir(searchPattern);
+
+    temp = getcon_emoclips([log_file_path filesep log_file.name]);
+
+    con_file_path = [Subject_Path 'EEG' filesep RUN{i}];
+
+    % Create a search pattern for files ending with '.csv'
+    searchPattern_2 = fullfile(con_file_path, '*.CON');
+    
+    % Use the dir function to get a list of files matching the search pattern
+    con_file = dir(searchPattern_2);
+
+   % Define the original file path
+    originalFilePath = [con_file_path filesep con_file.name]; 
+    
+    % Define the new file path with lowercase '.con' extension
+    [newFilePath, name, ~] = fileparts(originalFilePath);
+    newFilePath = fullfile(newFilePath, [name '.con']);  % New file name with lowercase extension
+    
+    % Open the original file for writing
+    fid = fopen(originalFilePath, 'wt');  % 'wt' mode will clear the existing file content
+    
+    % Write the header row with two columns
+    fprintf(fid, '%d,%d\n', 90, 1);
+    
+    % Write the data from 'temp' into the file (assuming 'temp' is already defined)
+    for row = 1:size(temp, 1)
+        fprintf(fid, '%f', temp(row, 1));
+        for col = 2:size(temp, 2)
+            fprintf(fid, ',%f', temp(row, col));
+        end
+        fprintf(fid, '\n');  % New line for next row
+    end
+    
+    % Close the original file
+    fclose(fid);
+        
+end
+
