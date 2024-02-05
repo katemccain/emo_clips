@@ -4,6 +4,7 @@ close all; clearvars;
 %Set directory - location of .set file
 DIR = '/Users/katemccain/Documents/video_alpha/Pilot_Data_Logs';
 
+
 Subject_ID = 'JP_pilot';
 
 %List of subjects to process, based on the name of the folder that contains that subject's data
@@ -14,6 +15,8 @@ RUN = {'run1', 'run2'};
 for i = 1:length(RUN)
 
     temp = [];
+%     temp_file_name = [];
+%     new_file_name = [];
 
     %Define subject path based on study directory and subject ID of current subject
     Subject_Path = ([DIR filesep Subject_ID filesep]);
@@ -58,6 +61,38 @@ for i = 1:length(RUN)
     % Close the original file
     fclose(fid);    
 
-    %%RENAME THE NEW .CON FILE TO LOWERCASE .con%%
+    % EMEGS takes con files with the lowercase extension '.con'
+    % but MATLAB doesn't let you rename it from upper to lower case
+    % directly
+
+    temp_file_name = [originalFilePath(:,1:end -3) 'txt'];
+    new_file_name = [originalFilePath(:,1:end -3) 'con'];
+
+    movefile(originalFilePath, temp_file_name);
+    movefile(temp_file_name, new_file_name);
+    
+
 end
 
+
+function [convec] = getcon_emoclips(csvfilepath)
+% This little piece of code opens a dat file from the EmoClips study with
+% 90 video clips, reads it, outputs a condition vector - should be 90 elements
+
+temp = readmatrix(csvfilepath);
+
+
+column_data = temp(3:end, 5);
+
+% Create a logical index vector that is true for non-NaN entries
+non_nan_indices = ~isnan(column_data);
+
+% Use the logical index to extract only the non-NaN values
+convec = column_data(non_nan_indices);
+
+
+if length(convec) ~= 90
+    disp('warning: not 90')
+end
+
+end
