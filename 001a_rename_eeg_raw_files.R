@@ -1,5 +1,5 @@
 # Put your data folder path here
-andrew_data_directory <- "/home/andrewf/Research_data/EEG/EmoClips/eeg"
+andrew_data_directory <- "/home/andrewf/Research_data/EEG/EmoClips/raw_data"
 
 if (dir.exists(andrew_data_directory)) {
   data_directory <- andrew_data_directory
@@ -22,3 +22,5 @@ new_upper_case_names <- gsub(pattern = "raw$",
 
 file.rename(from = lower_case_raw_files, 
             to = new_upper_case_names)
+
+
