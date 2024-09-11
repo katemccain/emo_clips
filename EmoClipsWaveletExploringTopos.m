@@ -64,23 +64,23 @@ OzChannel = 137;
 PzChannel = 126;
 
 figure(1)
-contourf(timeAxisMs, condensedFrequencyAxis, squeeze(emo002run1WapowerPleasant(PzChannel,:,:))'), colorbar
+contourf(timeAxisMs, condensedFrequencyAxis, squeeze(emo002run1WavletpowerPleasant(PzChannel,:,:))'), colorbar
 caxis([.8 4])
 figure(2)
-contourf(timeAxisMs, condensedFrequencyAxis, squeeze(emo002run1WapowerNeutral(PzChannel,:,:))'), colorbar
+contourf(timeAxisMs, condensedFrequencyAxis, squeeze(emo002run1WavletpowerNeutral(PzChannel,:,:))'), colorbar
 caxis([.8 4])
 figure(3)
-contourf(timeAxisMs, condensedFrequencyAxis, squeeze(emo002run1WapowerUnpleasant(PzChannel,:,:))'), colorbar
+contourf(timeAxisMs, condensedFrequencyAxis, squeeze(emo002run1WavletpowerUnpleasant(PzChannel,:,:))'), colorbar
 caxis([.8 4])
 
 figure(4)
-contourf(timeAxisMs, condensedFrequencyAxis, squeeze(emo002run1WapowerPleasantBaselined(PzChannel,:,:))'), colorbar
+contourf(timeAxisMs, condensedFrequencyAxis, squeeze(emo002run1WavletpowerPleasantBaselined(PzChannel,:,:))'), colorbar
 caxis([-50 35])
 figure(5)
-contourf(timeAxisMs, condensedFrequencyAxis, squeeze(emo002run1WapowerNeutralBaselined(PzChannel,:,:))'), colorbar
+contourf(timeAxisMs, condensedFrequencyAxis, squeeze(emo002run1WavletpowerNeutralBaselined(PzChannel,:,:))'), colorbar
 caxis([-50 35])
 figure(6)
-contourf(timeAxisMs, condensedFrequencyAxis, squeeze(emo002run1WapowerUnpleasantBaselined(PzChannel,:,:))'), colorbar
+contourf(timeAxisMs, condensedFrequencyAxis, squeeze(emo002run1WavletpowerUnpleasantBaselined(PzChannel,:,:))'), colorbar
 caxis([-50 35])
 
 % Save the topography, matrix is channelsXsamplePointsXfrequency with each
@@ -98,16 +98,16 @@ stopFrequencyToAverageHz = 9;
 %SaveAvgFile(FilePath,AvgMat,NTrialAvgVec,StdChanTimeMat, ...
 %     SampRate,MedMedRawVec,MedMedAvgVec,EegMegStatus,NChanExtra,TrigPoint,HybridFactor,...
 %     HybridDataCell,DataTypeVal,EffectDf,ErrorDf)
-SaveAvgFile('~/Research_data/EEG/EmoClips/emo002run1WapowerPleasant.at', ...
-    squeeze((mean(emo002run1WapowerPleasant(:,:,frequencyAxisAverageIndexStart:frequencyAxisAverageIndexStop),3))), ...
+SaveAvgFile('/Users/csea/Documents/emo002run1WapowerPleasant.at', ...
+    squeeze((mean(emo002run1WavletpowerPleasant(:,:,frequencyAxisAverageIndexStart:frequencyAxisAverageIndexStop),3))), ...
     [],[],1000,[],[],1,[],2001)
 
-SaveAvgFile('~/Research_data/EEG/EmoClips/emo002run1WapowerNeutral.at', ...
-    squeeze((mean(emo002run1WapowerNeutral(:,:,frequencyAxisAverageIndexStart:frequencyAxisAverageIndexStop),3))), ...
+SaveAvgFile('/Users/csea/Documents/emo002run1WapowerNeutral.at', ...
+    squeeze((mean(emo002run1WavletpowerNeutral(:,:,frequencyAxisAverageIndexStart:frequencyAxisAverageIndexStop),3))), ...
     [],[],1000,[],[],1,[],2001)
 
-SaveAvgFile('~/Research_data/EEG/EmoClips/emo002run1WapowerUnpleasant.at', ...
-    squeeze((mean(emo002run1WapowerUnpleasant(:,:,frequencyAxisAverageIndexStart:frequencyAxisAverageIndexStop),3))), ...
+SaveAvgFile('/Users/csea/Documents/emo002run1WapowerUnpleasant.at', ...
+    squeeze((mean(emo002run1WavletpowerUnpleasant(:,:,frequencyAxisAverageIndexStart:frequencyAxisAverageIndexStop),3))), ...
     [],[],1000,[],[],1,[],2001)
 
 
