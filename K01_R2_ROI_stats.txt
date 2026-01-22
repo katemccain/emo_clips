@@ -1,0 +1,270 @@
+#remaking atlas 
+# 1) Align HCPex with NN, then force integer type
+3dAllineate -base atlas_materials/MNI152_2009_template.nii.gz \
+  -source atlas_materials/HCPex.nii.gz \
+  -prefix atlas_materials/HCPex_aligned_tmp.nii.gz \
+  -final NN -overwrite
+
+3dcalc \
+  -a atlas_materials/HCPex_aligned_tmp.nii.gz \
+  -expr 'a' \
+  -datum short \
+  -prefix atlas_materials/HCPex_aligned_2.nii.gz
+
+# 2) Resample cerebellum segmentation with NN and integer type
+3dresample -rmode NN \
+  -master atlas_materials/HCPex_aligned.nii.gz \
+  -inset atlas_materials/Cerebellum-MNIsegment.nii.gz \
+  -prefix atlas_materials/Cerebellum-MNIsegment_resampled_tmp.nii.gz
+
+3dcalc \
+  -a atlas_materials/Cerebellum-MNIsegment_resampled_tmp.nii.gz \
+  -expr 'a' \
+  -datum short \
+  -prefix atlas_materials/Cerebellum-MNIsegment_resampled_2.nii.gz
+
+# 3) Merge by replacement (no summed labels)
+3dcalc -a atlas_materials/HCPex_aligned_2.nii.gz \
+  -b atlas_materials/Cerebellum-MNIsegment_resampled_2.nii.gz \
+  -expr 'a*(1-step(b)) + step(b)*(b+1000)' \
+  -datum short \
+  -prefix atlas_materials/HCPex_SUIT_atlas_2.nii.gz
+
+@Atlasize -dset atlas_materials/HCPex_aligned_2.nii.gz -lab_file atlas_materials/HCPex_labels.txt 1 0 -atlas_name HCPex_2 -atlas_type G -auto_backup 
+
+@Atlasize -dset atlas_materials/HCPex_SUIT_atlas_2.nii.gz -lab_file atlas_materials/HCPex_SUIT_labels.txt 1 0 -atlas_name HCPex_SUIT_2 -atlas_type G -auto_backup
+
+
+3dmaskdump -noijk -mask atlas_materials/HCPex_SUIT_atlas_2.nii.gz \
+  atlas_materials/HCPex_SUIT_atlas_2.nii.gz | sort -n -u | tail
+
+
+cd /home/andrewfarkas/Research_data/multimodal/emoclips/processed
+
+3dresample \
+  -master /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS001.results/pb04.EMOCLIPS001.r01.scale+tlrc \
+  -inset  HCPex_SUIT_atlas_2.nii.gz \
+  -prefix HCPex_resam+tlrc \
+  -rmode NN
+
+3dresample \
+  -master /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS001.results/pb04.EMOCLIPS001.r01.scale+tlrc \
+  -inset  HCPex_SUIT_atlas.nii.gz \
+  -rmode NN \
+  -prefix HCPex_resam_nn+tlrc
+
+# force integer type, just to be safe
+3dcalc -a HCPex_resam_nn+tlrc -expr 'round(a)' -datum short -prefix HCPex_resam_int+tlrc
+
+
+3dBrickStat -slow -non-zero -unique HCPex_resam_nn+tlrc > unique_vals.txt
+wc -w unique_vals.txt
+tail unique_vals.txt
+
+3dmaskdump -noijk -mask HCPex_resam+tlrc HCPex_resam+tlrc \
+  | sort -n -u > unique_vals.txt
+wc -l unique_vals.txt
+tail unique_vals.txt
+
+
+3dmaskdump -noijk -mask HCPex_SUIT_atlas.nii.gz HCPex_SUIT_atlas.nii.gz \
+  | sort -n -u > unique_vals.txt
+wc -l unique_vals.txt
+tail unique_vals.txt
+
+
+
+3dROIstats -quiet -1Dformat \
+  -mask HCPex_resam+tlrc \
+  /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS001.results/pb04.EMOCLIPS001.r01.scale+tlrc \
+  > ROI_mean_emo001.1D
+
+
+3dDeconvolve \
+  -force_TR 1.8 \
+  -input ROI_mean_emo001.1D\' \
+  -fout -tout \
+  -censor /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS001.results/censor_EMOCLIPS001_combined_2.1D \
+  -polort 15 \
+  -num_stimts 3 \
+  -stim_times 1 /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS001.results/stimuli/pleasant_video_start_times.1D   'BLOCK(10,1)' -stim_label 1 pleasant \
+  -stim_times 2 /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS001.results/stimuli/neutral_video_start_times.1D    'BLOCK(10,1)' -stim_label 2 neutral \
+  -stim_times 3 /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS001.results/stimuli/unpleasant_video_start_times.1D 'BLOCK(10,1)' -stim_label 3 unpleasant \
+  -num_glt 3 \
+  -gltsym 'SYM: +0.5*pleasant +0.5*unpleasant -1*neutral' \
+  -glt_label 1 EmoVsNeutral \
+  -gltsym 'SYM: +1*pleasant -1*neutral' \
+  -glt_label 2 PleasantVsNeutral \
+  -gltsym 'SYM: +1*unpleasant -1*neutral' \
+  -glt_label 3 UnpleasantVsNeutral \
+  -x1D ROI_GLM_emo001.xmat.1D \
+  -bucket ROI_GLM_emo001.stats
+
+
+  3dREMLfit \
+  -matrix ROI_GLM_emo001.xmat.1D \
+  -input ROI_mean_emo001.1D\' \
+  -fout -tout \
+  -Rbuck stats.ROI_GLM_emo001_REML \
+  -Rvar  stats.ROI_GLM_emo001_REMLvar \
+  -Rerrts errts.ROI_GLM_emo001_REML \
+  -verb $*
+
+
+
+
+3dROIstats -quiet -1Dformat \
+  -mask HCPex_resam+tlrc \
+  /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS002.results/pb05.EMOCLIPS002.r01.scale+tlrc \
+  > ROI_mean_emo002.1D
+
+
+3dDeconvolve \
+  -force_TR 1.8 \
+  -input ROI_mean_emo002.1D\' \
+  -fout -tout \
+  -censor /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS002.results/censor_EMOCLIPS002_combined_2.1D \
+  -polort 15 \
+  -num_stimts 3 \
+  -stim_times 1 /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS002.results/stimuli/pleasant_video_start_times.1D   'BLOCK(10,1)' -stim_label 1 pleasant \
+  -stim_times 2 /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS002.results/stimuli/neutral_video_start_times.1D    'BLOCK(10,1)' -stim_label 2 neutral \
+  -stim_times 3 /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS002.results/stimuli/unpleasant_video_start_times.1D 'BLOCK(10,1)' -stim_label 3 unpleasant \
+  -num_glt 3 \
+  -gltsym 'SYM: +0.5*pleasant +0.5*unpleasant -1*neutral' \
+  -glt_label 1 EmoVsNeutral \
+  -gltsym 'SYM: +1*pleasant -1*neutral' \
+  -glt_label 2 PleasantVsNeutral \
+  -gltsym 'SYM: +1*unpleasant -1*neutral' \
+  -glt_label 3 UnpleasantVsNeutral \
+  -x1D ROI_GLM_emo002.xmat.1D \
+  -bucket ROI_GLM_emo002.stats
+
+
+  3dREMLfit \
+  -matrix ROI_GLM_emo002.xmat.1D \
+  -input ROI_mean_emo002.1D\' \
+  -fout -tout \
+  -Rbuck stats.ROI_GLM_emo002_REML \
+  -Rvar  stats.ROI_GLM_emo002_REMLvar \
+  -Rerrts errts.ROI_GLM_emo002_REML \
+  -verb $*
+
+
+
+
+  3dROIstats -quiet -1Dformat \
+  -mask HCPex_resam+tlrc \
+  /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS003.results/pb05.EMOCLIPS003.r01.scale+tlrc \
+  > ROI_mean_emo003.1D
+
+
+3dDeconvolve \
+  -force_TR 1.8 \
+  -input ROI_mean_emo002.1D\' \
+  -fout -tout \
+  -censor /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS003.results/censor_EMOCLIPS003_combined_2.1D \
+  -polort 15 \
+  -num_stimts 3 \
+  -stim_times 1 /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS003.results/stimuli/pleasant_video_start_times.1D   'BLOCK(10,1)' -stim_label 1 pleasant \
+  -stim_times 2 /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS003.results/stimuli/neutral_video_start_times.1D    'BLOCK(10,1)' -stim_label 2 neutral \
+  -stim_times 3 /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS003.results/stimuli/unpleasant_video_start_times.1D 'BLOCK(10,1)' -stim_label 3 unpleasant \
+  -num_glt 3 \
+  -gltsym 'SYM: +0.5*pleasant +0.5*unpleasant -1*neutral' \
+  -glt_label 1 EmoVsNeutral \
+  -gltsym 'SYM: +1*pleasant -1*neutral' \
+  -glt_label 2 PleasantVsNeutral \
+  -gltsym 'SYM: +1*unpleasant -1*neutral' \
+  -glt_label 3 UnpleasantVsNeutral \
+  -x1D ROI_GLM_emo003.xmat.1D \
+  -bucket ROI_GLM_emo003.stats
+
+
+  3dREMLfit \
+  -matrix ROI_GLM_emo003.xmat.1D \
+  -input ROI_mean_emo003.1D\' \
+  -fout -tout \
+  -Rbuck stats.ROI_GLM_emo003_REML \
+  -Rvar  stats.ROI_GLM_emo003_REMLvar \
+  -Rerrts errts.ROI_GLM_emo003_REML \
+  -verb $*
+
+3dinfo -nt -nv /home/andrewfarkas/Research_data/multimodal/emoclips/processed/stats.ROI_GLM_emo001_REML.1D
+
+3dinfo -verb /home/andrewfarkas/Research_data/multimodal/emoclips/processed/stats.ROI_GLM_emo001_REML.1D | head
+
+in=/home/andrewfarkas/Research_data/multimodal/emoclips/processed/stats.ROI_GLM_emo001_REML.1D
+awk '{print $11}' "${in}" > emo001_coef.1D
+awk '{print $12}' "${in}" > emo001_tstat.1D
+in=/home/andrewfarkas/Research_data/multimodal/emoclips/processed/stats.ROI_GLM_emo002_REML.1D
+awk '{print $11}' "${in}" > emo002_coef.1D
+awk '{print $12}' "${in}" > emo002_tstat.1D
+in=/home/andrewfarkas/Research_data/multimodal/emoclips/processed/stats.ROI_GLM_emo003_REML.1D
+awk '{print $11}' "${in}" > emo003_coef.1D
+awk '{print $12}' "${in}" > emo003_tstat.1D
+
+3dUndump -prefix emo001_coef -datum float -nxyz 460 1 1 -orient RAI emo001_coef.1D
+3dUndump -prefix emo001_tstat -datum float -nxyz 460 1 1 -orient RAI emo001_tstat.1D
+
+
+
+
+
+# 3dMEMA like a better version of 3dttest++ because it weights the clean participants more
+# but no clustersim so maybe not better
+3dMEMA \
+  -prefix group_EmoVsNeu_MEMA_roi \
+  -max_zeros 1 \
+  -set EmoVsNeu \
+  EMOCLIPS001 \
+    "/home/andrewfarkas/Research_data/multimodal/emoclips/processed/stats.ROI_GLM_emo001_REML.1D[10]" \
+    "/home/andrewfarkas/Research_data/multimodal/emoclips/processed/stats.ROI_GLM_emo001_REML.1D[11]" \
+  EMOCLIPS002 \
+    "/home/andrewfarkas/Research_data/multimodal/emoclips/processed/stats.ROI_GLM_emo002_REML.1D[10]" \
+    "/home/andrewfarkas/Research_data/multimodal/emoclips/processed/stats.ROI_GLM_emo002_REML.1D[11]" \
+  EMOCLIPS003 \
+    "/home/andrewfarkas/Research_data/multimodal/emoclips/processed/stats.ROI_GLM_emo003_REML.1D[10]" \
+    "/home/andrewfarkas/Research_data/multimodal/emoclips/processed/stats.ROI_GLM_emo003_REML.1D[11]"
+
+3dinfo -d3 -nv -nt group_EmoVsNeu_MEMA_roi.1D
+
+# Do MT average ROI
+# Probably average left and right as well
+
+
+
+3dDeconvolve \
+  -force_TR 1.8 \
+  -input /home/andrewfarkas/Research_data/multimodal/emoclips/processed/lateral_occipital_emo001.1D \
+  -fout -tout \
+  -censor /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS001.results/censor_EMOCLIPS001_combined_2.1D \
+  -ortvec /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS001.results/mot_demean.r01.1D mot_demean_r01 \
+  -polort 15 \
+  -num_stimts 3 \
+  -stim_times 1 /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS001.results/stimuli/pleasant_video_start_times.1D   'BLOCK(10,1)' -stim_label 1 pleasant \
+  -stim_times 2 /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS001.results/stimuli/neutral_video_start_times.1D    'BLOCK(10,1)' -stim_label 2 neutral \
+  -stim_times 3 /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS001.results/stimuli/unpleasant_video_start_times.1D 'BLOCK(10,1)' -stim_label 3 unpleasant \
+  -num_glt 3 \
+  -gltsym 'SYM: +0.5*pleasant +0.5*unpleasant -1*neutral' \
+  -glt_label 1 EmoVsNeutral \
+  -gltsym 'SYM: +1*pleasant -1*neutral' \
+  -glt_label 2 PleasantVsNeutral \
+  -gltsym 'SYM: +1*unpleasant -1*neutral' \
+  -glt_label 3 UnpleasantVsNeutral \
+  -x1D lateral_occipital_emo001.xmat.1D \
+  -xjpeg X_lateral_occipital_emo001.jpg \
+  -bucket lateral_occipital_emo001.stats
+
+
+  3dREMLfit \
+  -matrix lateral_occipital_emo001.xmat.1D \
+  -input /home/andrewfarkas/Research_data/multimodal/emoclips/processed/lateral_occipital_emo001.1D \
+  -fout -tout \
+  -Rbuck stats.lateral_occipital_emo001_REML \
+  -Rvar  stats.lateral_occipital_emo001_REMLvar \
+  -Rerrts errts.lateral_occipital_emo001_REML \
+  -verb $*
+
+
+3dmaskdump -noijk -mask HCPex_resam+tlrc HCPex_resam+tlrc |
+awk '($1>=1 && $1<=426){c[$1]++} END{for(i=1;i<=426;i++) print (c[i]+0)}' \
+> HCPex_resam_roi_nvox.1D
