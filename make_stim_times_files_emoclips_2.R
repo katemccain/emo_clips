@@ -5,7 +5,9 @@
 # )
 
 # log_filepath <- "/home/andrewfarkas/Research_data/multimodal/emoclips/raw_data/EMOCLIPS-PILOT-002/logfiles/emoclips_PD_002_1_emoclips_eeg_fmri_pilot_2025-10-29_09h22.49.608.csv"
-log_filepath <- "/home/andrewfarkas/Research_data/multimodal/emoclips/raw_data/EMOCLIPS-PILOT-003/log/EMOCLIPS_PILOT_003_emoclips_eeg_fmri_pilot_2025-12-10_10h25.06.083.csv"
+# log_filepath <- "/home/andrewfarkas/Research_data/multimodal/emoclips/raw_data/EMOCLIPS-PILOT-003/log/EMOCLIPS_PILOT_003_emoclips_eeg_fmri_pilot_2025-12-10_10h25.06.083.csv"
+# log_filepath <- "/home/andrewfarkas/Research_data/multimodal/emoclips/raw_data/EMOCLIPS-PILOT-004/log/emoclips_pilot_004_emoclips_eeg_fmri_pilot_2026-01-21_10h37.39.106.csv"
+log_filepath <- "/home/andrewfarkas/Research_data/multimodal/emoclips/raw_data/EMOCLIPS-PILOT-005/log/944121_emoclips_eeg_fmri_pilot_2026-01-23_10h25.10.851.csv"
 log_file <- read.delim(file = log_filepath, header = T, sep = ",")
 
 
@@ -27,27 +29,35 @@ unpleasant_video_start_times <- video_start_times[valence_ids == 3]
 
 write(
   x = video_start_times,
-  file = "/home/andrewfarkas/Research_data/multimodal/emoclips/raw_data/EMOCLIPS-PILOT-003/video_start_times.1D",
+  # file = "/home/andrewfarkas/Research_data/multimodal/emoclips/raw_data/EMOCLIPS-PILOT-003/video_start_times.1D",
+  # file = "/home/andrewfarkas/Research_data/multimodal/emoclips/raw_data/EMOCLIPS-PILOT-004/video_start_times.1D",
+  file = "/home/andrewfarkas/Research_data/multimodal/emoclips/raw_data/EMOCLIPS-PILOT-005/video_start_times.1D",
   ncolumns = 1
 )
 
 write(
   x = pleasant_video_start_times,
-  file = "/home/andrewfarkas/Research_data/multimodal/emoclips/raw_data/EMOCLIPS-PILOT-003/pleasant_video_start_times.1D",
+  # file = "/home/andrewfarkas/Research_data/multimodal/emoclips/raw_data/EMOCLIPS-PILOT-003/pleasant_video_start_times.1D",
+  # file = "/home/andrewfarkas/Research_data/multimodal/emoclips/raw_data/EMOCLIPS-PILOT-004/pleasant_video_start_times.1D",
+  file = "/home/andrewfarkas/Research_data/multimodal/emoclips/raw_data/EMOCLIPS-PILOT-005/pleasant_video_start_times.1D",
   ncolumns = 1
 )
 
 write(
   x = neutral_video_start_times,
   # file = "/home/andrewfarkas/Research_data/multimodal/emoclips/raw_data/EMOCLIPS-PILOT-002/neutral_video_start_times.1D",
-  file = "/home/andrewfarkas/Research_data/multimodal/emoclips/raw_data/EMOCLIPS-PILOT-003/neutral_video_start_times.1D",
+  # file = "/home/andrewfarkas/Research_data/multimodal/emoclips/raw_data/EMOCLIPS-PILOT-003/neutral_video_start_times.1D",
+  # file = "/home/andrewfarkas/Research_data/multimodal/emoclips/raw_data/EMOCLIPS-PILOT-004/neutral_video_start_times.1D",
+  file = "/home/andrewfarkas/Research_data/multimodal/emoclips/raw_data/EMOCLIPS-PILOT-005/neutral_video_start_times.1D",
   ncolumns = 1
 )
 
 write(
   x = unpleasant_video_start_times,
   # file = "/home/andrewfarkas/Research_data/multimodal/emoclips/raw_data/EMOCLIPS-PILOT-002/unpleasant_video_start_times.1D",
-  file = "/home/andrewfarkas/Research_data/multimodal/emoclips/raw_data/EMOCLIPS-PILOT-003/unpleasant_video_start_times.1D",
+  # file = "/home/andrewfarkas/Research_data/multimodal/emoclips/raw_data/EMOCLIPS-PILOT-003/unpleasant_video_start_times.1D",
+  # file = "/home/andrewfarkas/Research_data/multimodal/emoclips/raw_data/EMOCLIPS-PILOT-004/unpleasant_video_start_times.1D",
+  file = "/home/andrewfarkas/Research_data/multimodal/emoclips/raw_data/EMOCLIPS-PILOT-005/unpleasant_video_start_times.1D",
   ncolumns = 1
 )
 

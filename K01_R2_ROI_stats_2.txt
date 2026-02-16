@@ -96,6 +96,77 @@
   -verb $*
 
 
+3dDeconvolve \
+  -force_TR 1.8 \
+  -input ROI_mean_emo004.1D\' \
+  -fout -tout \
+  -censor /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS004.results/censor_EMOCLIPS004_combined_2.1D \
+  -ortvec /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS004.results/mot_demean.r01.1D mot_demean_r01 \
+  -polort 15 \
+  -num_stimts 3 \
+  -stim_times 1 /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS004.results/stimuli/pleasant_video_start_times.1D   'BLOCK(10,1)' -stim_label 1 pleasant \
+  -stim_times 2 /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS004.results/stimuli/neutral_video_start_times.1D    'BLOCK(10,1)' -stim_label 2 neutral \
+  -stim_times 3 /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS004.results/stimuli/unpleasant_video_start_times.1D 'BLOCK(10,1)' -stim_label 3 unpleasant \
+  -num_glt 3 \
+  -gltsym 'SYM: +0.5*pleasant +0.5*unpleasant -1*neutral' \
+  -glt_label 1 EmoVsNeutral \
+  -gltsym 'SYM: +1*pleasant -1*neutral' \
+  -glt_label 2 PleasantVsNeutral \
+  -gltsym 'SYM: +1*unpleasant -1*neutral' \
+  -glt_label 3 UnpleasantVsNeutral \
+  -x1D ROI_GLM_emo004.xmat.1D \
+  -xjpeg X_ROI_GLM_emo004.jpg \
+  -bucket ROI_GLM_emo004.stats
+
+
+  3dREMLfit \
+  -matrix ROI_GLM_emo004.xmat.1D \
+  -input ROI_mean_emo004.1D\' \
+  -fout -tout \
+  -Rbuck stats.ROI_GLM_emo004_REML \
+  -Rvar  stats.ROI_GLM_emo004_REMLvar \
+  -Rerrts errts.ROI_GLM_emo004_REML \
+  -verb $*
+
+3dROIstats -quiet -1Dformat \
+  -mask HCPex_resam+tlrc \
+  /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS005.results/pb05.EMOCLIPS005.r01.scale+tlrc \
+  > ROI_mean_emo005.1D
+
+
+3dDeconvolve \
+  -force_TR 1.8 \
+  -input ROI_mean_emo005.1D\' \
+  -fout -tout \
+  -censor /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS005.results/censor_EMOCLIPS005_combined_2.1D \
+  -ortvec /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS005.results/mot_demean.r01.1D mot_demean_r01 \
+  -polort 15 \
+  -num_stimts 3 \
+  -stim_times 1 /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS005.results/stimuli/pleasant_video_start_times.1D   'BLOCK(10,1)' -stim_label 1 pleasant \
+  -stim_times 2 /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS005.results/stimuli/neutral_video_start_times.1D    'BLOCK(10,1)' -stim_label 2 neutral \
+  -stim_times 3 /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS005.results/stimuli/unpleasant_video_start_times.1D 'BLOCK(10,1)' -stim_label 3 unpleasant \
+  -num_glt 3 \
+  -gltsym 'SYM: +0.5*pleasant +0.5*unpleasant -1*neutral' \
+  -glt_label 1 EmoVsNeutral \
+  -gltsym 'SYM: +1*pleasant -1*neutral' \
+  -glt_label 2 PleasantVsNeutral \
+  -gltsym 'SYM: +1*unpleasant -1*neutral' \
+  -glt_label 3 UnpleasantVsNeutral \
+  -x1D ROI_GLM_emo005.xmat.1D \
+  -xjpeg X_ROI_GLM_emo005.jpg \
+  -bucket ROI_GLM_emo005.stats
+
+
+  3dREMLfit \
+  -matrix ROI_GLM_emo005.xmat.1D \
+  -input ROI_mean_emo005.1D\' \
+  -fout -tout \
+  -Rbuck stats.ROI_GLM_emo005_REML \
+  -Rvar  stats.ROI_GLM_emo005_REMLvar \
+  -Rerrts errts.ROI_GLM_emo005_REML \
+  -verb $*
+
+
 
 #
 
@@ -195,3 +266,71 @@
   -Rvar  stats.lateral_occipital_emo003_REMLvar \
   -Rerrts errts.lateral_occipital_emo003_REML \
   -verb $*
+
+
+3dDeconvolve \
+  -force_TR 1.8 \
+  -input /home/andrewfarkas/Research_data/multimodal/emoclips/processed/lateral_occipital_emo004.1D \
+  -fout -tout \
+  -censor /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS004.results/censor_EMOCLIPS004_combined_2.1D \
+  -ortvec /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS004.results/mot_demean.r01.1D mot_demean_r01 \
+  -polort 15 \
+  -num_stimts 3 \
+  -stim_times 1 /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS004.results/stimuli/pleasant_video_start_times.1D   'BLOCK(10,1)' -stim_label 1 pleasant \
+  -stim_times 2 /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS004.results/stimuli/neutral_video_start_times.1D    'BLOCK(10,1)' -stim_label 2 neutral \
+  -stim_times 3 /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS004.results/stimuli/unpleasant_video_start_times.1D 'BLOCK(10,1)' -stim_label 3 unpleasant \
+  -num_glt 3 \
+  -gltsym 'SYM: +0.5*pleasant +0.5*unpleasant -1*neutral' \
+  -glt_label 1 EmoVsNeutral \
+  -gltsym 'SYM: +1*pleasant -1*neutral' \
+  -glt_label 2 PleasantVsNeutral \
+  -gltsym 'SYM: +1*unpleasant -1*neutral' \
+  -glt_label 3 UnpleasantVsNeutral \
+  -x1D lateral_occipital_emo004.xmat.1D \
+  -xjpeg X_lateral_occipital_emo004.jpg \
+  -bucket lateral_occipital_emo004.stats
+
+
+  3dREMLfit \
+  -matrix lateral_occipital_emo004.xmat.1D \
+  -input /home/andrewfarkas/Research_data/multimodal/emoclips/processed/lateral_occipital_emo004.1D \
+  -fout -tout \
+  -Rbuck stats.lateral_occipital_emo004_REML \
+  -Rvar  stats.lateral_occipital_emo004_REMLvar \
+  -Rerrts errts.lateral_occipital_emo004_REML \
+  -verb $*
+
+
+3dDeconvolve \
+  -force_TR 1.8 \
+  -input /home/andrewfarkas/Research_data/multimodal/emoclips/processed/lateral_occipital_emo005.1D \
+  -fout -tout \
+  -censor /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS005.results/censor_EMOCLIPS005_combined_2.1D \
+  -ortvec /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS005.results/mot_demean.r01.1D mot_demean_r01 \
+  -polort 15 \
+  -num_stimts 3 \
+  -stim_times 1 /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS005.results/stimuli/pleasant_video_start_times.1D   'BLOCK(10,1)' -stim_label 1 pleasant \
+  -stim_times 2 /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS005.results/stimuli/neutral_video_start_times.1D    'BLOCK(10,1)' -stim_label 2 neutral \
+  -stim_times 3 /home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS005.results/stimuli/unpleasant_video_start_times.1D 'BLOCK(10,1)' -stim_label 3 unpleasant \
+  -num_glt 3 \
+  -gltsym 'SYM: +0.5*pleasant +0.5*unpleasant -1*neutral' \
+  -glt_label 1 EmoVsNeutral \
+  -gltsym 'SYM: +1*pleasant -1*neutral' \
+  -glt_label 2 PleasantVsNeutral \
+  -gltsym 'SYM: +1*unpleasant -1*neutral' \
+  -glt_label 3 UnpleasantVsNeutral \
+  -x1D lateral_occipital_emo005.xmat.1D \
+  -xjpeg X_lateral_occipital_emo005.jpg \
+  -bucket lateral_occipital_emo005.stats
+
+
+  3dREMLfit \
+  -matrix lateral_occipital_emo005.xmat.1D \
+  -input /home/andrewfarkas/Research_data/multimodal/emoclips/processed/lateral_occipital_emo005.1D \
+  -fout -tout \
+  -Rbuck stats.lateral_occipital_emo005_REML \
+  -Rvar  stats.lateral_occipital_emo005_REMLvar \
+  -Rerrts errts.lateral_occipital_emo005_REML \
+  -verb $*
+
+  

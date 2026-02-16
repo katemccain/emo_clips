@@ -216,9 +216,41 @@
   -verb $*
 
 
+  3dDeconvolve \
+  -input pb05.EMOCLIPS004.r01.scale+tlrc.HEAD \
+  -censor censor_EMOCLIPS004_combined_2.1D \
+  -ortvec mot_demean.r01.1D mot_demean_r01 \
+  -polort 15 \
+  -num_stimts 3 \
+  -stim_times 1 stimuli/pleasant_video_start_times.1D   'BLOCK(10,1)' -stim_label 1 pleasant \
+  -stim_times 2 stimuli/neutral_video_start_times.1D    'BLOCK(10,1)' -stim_label 2 neutral \
+  -stim_times 3 stimuli/unpleasant_video_start_times.1D 'BLOCK(10,1)' -stim_label 3 unpleasant \
+  -num_glt 3 \
+  -gltsym   'SYM: +0.5*pleasant +0.5*unpleasant' \
+  -glt_label 1 EmoMean \
+  -gltsym   'SYM: +1*neutral' \
+  -glt_label 2 NeuMean \
+  -gltsym   'SYM: +0.5*pleasant +0.5*unpleasant -1*neutral' \
+  -glt_label 3 EmoVsNeu \
+  -x1D X_block_EmoGLTs.xmat.1D \
+  -xjpeg X_block_EmoGLTs.jpg \
+  -x1D_uncensored X_block_EmoGLTs.nocensor.xmat.1D \
+  -x1D_stop
+
+
+3dREMLfit \
+  -matrix X_block_EmoGLTs.xmat.1D \
+  -input pb05.EMOCLIPS004.r01.scale+tlrc.HEAD \
+  -fout -tout \
+  -Rbuck stats.EMOCLIPS004_block_REML_EmoAndNeu \
+  -Rvar  stats.EMOCLIPS004_block_REMLvar_EmoAndNeu \
+  -Rerrts errts.EMOCLIPS004_block_REML_EmoAndNeu \
+  -verb $*
+
+
 # 3dMEMA an alternative to 3dttest++ because it weighs the clean participants more
 3dMEMA \
-  -prefix group_EmoVsNeu_MEMA_mask_2 \
+  -prefix group_EmoVsNeu_MEMA_mask_3 \
   -mask "/home/andrewfarkas/Research_data/multimodal/emoclips/processed/used_MNI_brain_mask.nii.gz" \
   -set EmoVsNeu \
   EMOCLIPS001 \
@@ -229,7 +261,10 @@
     "/home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS002.results/stats.EMOCLIPS002_block_REML_EmoVsNeu+tlrc[EmoVsNeu#0_Tstat]" \
   EMOCLIPS003 \
     "/home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS003.results/stats.EMOCLIPS003_block_REML_EmoVsNeu+tlrc[EmoVsNeu#0_Coef]" \
-    "/home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS003.results/stats.EMOCLIPS003_block_REML_EmoVsNeu+tlrc[EmoVsNeu#0_Tstat]"
+    "/home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS003.results/stats.EMOCLIPS003_block_REML_EmoVsNeu+tlrc[EmoVsNeu#0_Tstat]" \
+  EMOCLIPS004 \
+    "/home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS004.results/stats.EMOCLIPS004_block_REML_EmoAndNeu+tlrc[EmoVsNeu#0_Coef]" \
+    "/home/andrewfarkas/Research_data/multimodal/emoclips/processed/EMOCLIPS004.results/stats.EMOCLIPS004_block_REML_EmoAndNeu+tlrc[EmoVsNeu#0_Tstat]"
 
 
 3dttest++ -prefix ttest_emoclips_3_pilots_EmoVsNeu \

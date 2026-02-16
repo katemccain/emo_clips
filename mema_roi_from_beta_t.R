@@ -9,6 +9,12 @@ roi_emo002 <- read.table(
 roi_emo003 <- read.table(
   file = "/home/andrewfarkas/Research_data/multimodal/emoclips/processed/ROI_mean_emo003.1D"
 )
+roi_emo004 <- read.table(
+  file = "/home/andrewfarkas/Research_data/multimodal/emoclips/processed/ROI_mean_emo004.1D"
+)
+roi_emo005 <- read.table(
+  file = "/home/andrewfarkas/Research_data/multimodal/emoclips/processed/ROI_mean_emo005.1D"
+)
 
 stats_emo001 <- readxl::read_excel(
   path = "/home/andrewfarkas/Research_data/multimodal/emoclips/processed/tempemo001roi_stats.xlsx"
@@ -18,6 +24,12 @@ stats_emo002 <- readxl::read_excel(
 )
 stats_emo003 <- readxl::read_excel(
   path = "/home/andrewfarkas/Research_data/multimodal/emoclips/processed/tempemo003roi_stats.xlsx"
+)
+stats_emo004 <- readxl::read_excel(
+  path = "/home/andrewfarkas/Research_data/multimodal/emoclips/processed/tempemo004roi_stats.xlsx"
+)
+stats_emo005 <- readxl::read_excel(
+  path = "/home/andrewfarkas/Research_data/multimodal/emoclips/processed/tempemo005roi_stats.xlsx"
 )
 
 stats_emo001 %>%
@@ -41,6 +53,28 @@ stats_emo002 %>%
   select(region_id, region_name, `EmoVsNeut Coef`, EmoVsNeut_t, voxels)
 
 stats_emo003 %>%
+  # filter(area == "Ventral_Stream_Visual") %>% # none
+  filter(area == "MT + _Complex") %>% # 18 Area_FST_L ,  24 Area_PH_L, 19 Area_Lateral_Occipital_1_L, 20 Area_Lateral_Occipital_2_L, 21 Area_Lateral_Occipital_3_L
+  # filter(area == "Medial_Temporal") %>% # none
+  # filter(area == "Lateral_Temporal") %>% #
+  # filter(area == "Early_Auditory") %>%
+  # filter(area == "Auditory_Association") %>%
+  # filter(region_id %in% c(11,12,13)) %>%
+  select(region_id, region_name, `EmoVsNeut Coef`, EmoVsNeut_t, voxels)
+
+
+stats_emo004 %>%
+  # filter(area == "Ventral_Stream_Visual") %>% # none
+  filter(area == "MT + _Complex") %>% # 18 Area_FST_L ,  24 Area_PH_L, 19 Area_Lateral_Occipital_1_L, 20 Area_Lateral_Occipital_2_L, 21 Area_Lateral_Occipital_3_L
+  # filter(area == "Medial_Temporal") %>% # none
+  # filter(area == "Lateral_Temporal") %>% #
+  # filter(area == "Early_Auditory") %>%
+  # filter(area == "Auditory_Association") %>%
+  # filter(region_id %in% c(11,12,13)) %>%
+  select(region_id, region_name, `EmoVsNeut Coef`, EmoVsNeut_t, voxels)
+
+
+stats_emo005 %>%
   # filter(area == "Ventral_Stream_Visual") %>% # none
   filter(area == "MT + _Complex") %>% # 18 Area_FST_L ,  24 Area_PH_L, 19 Area_Lateral_Occipital_1_L, 20 Area_Lateral_Occipital_2_L, 21 Area_Lateral_Occipital_3_L
   # filter(area == "Medial_Temporal") %>% # none
@@ -81,6 +115,38 @@ stats_emo003 %>%
   # filter(region_id %in% c(11,12,13)) %>%
   select(region_id, region_name, `EmoVsNeut Coef`, EmoVsNeut_t, voxels)
 
+stats_emo004 %>%
+  # filter(area == "Ventral_Stream_Visual") %>% # none
+  # filter(area == "MT + _Complex") %>% # 18 Area_FST_L ,
+  # filter(area == "Medial_Temporal") %>% # none
+  filter(area == "Lateral_Temporal") %>% #  88 Area_PHT_L 268 Area_PHT_R
+  # filter(area == "Early_Auditory") %>%
+  # filter(area == "Auditory_Association") %>%
+  # filter(region_id %in% c(11,12,13)) %>%
+  select(region_id, region_name, `EmoVsNeut Coef`, EmoVsNeut_t, voxels)
+
+
+stats_emo004 %>%
+  # filter(area == "Ventral_Stream_Visual") %>% # none
+  # filter(area == "MT + _Complex") %>% # 18 Area_FST_L ,
+  # filter(area == "Medial_Temporal") %>% # none
+  filter(area == "Lateral_Temporal") %>% #  88 Area_PHT_L 268 Area_PHT_R
+  # filter(area == "Early_Auditory") %>%
+  # filter(area == "Auditory_Association") %>%
+  # filter(region_id %in% c(11,12,13)) %>%
+  select(region_id, region_name, `EmoVsNeut Coef`, EmoVsNeut_t, voxels)
+
+
+stats_emo005 %>%
+  # filter(area == "Ventral_Stream_Visual") %>% # none
+  # filter(area == "MT + _Complex") %>% # 18 Area_FST_L ,
+  # filter(area == "Medial_Temporal") %>% # none
+  filter(area == "Lateral_Temporal") %>% #  88 Area_PHT_L 268 Area_PHT_R
+  # filter(area == "Early_Auditory") %>%
+  # filter(area == "Auditory_Association") %>%
+  # filter(region_id %in% c(11,12,13)) %>%
+  select(region_id, region_name, `EmoVsNeut Coef`, EmoVsNeut_t, voxels)
+
 
 stats_emo001 %>%
   # filter(area == "Ventral_Stream_Visual") %>% # none
@@ -105,6 +171,28 @@ stats_emo002 %>%
   select(region_id, region_name, `EmoVsNeut Coef`, EmoVsNeut_t, voxels)
 
 stats_emo003 %>%
+  # filter(area == "Ventral_Stream_Visual") %>% # none
+  # filter(area == "MT + _Complex") %>% # 18 Area_FST_L ,  24 Area_PH_L, 19 Area_Lateral_Occipital_1_L, 20 Area_Lateral_Occipital_2_L, 21 Area_Lateral_Occipital_3_L
+  # filter(area == "Medial_Temporal") %>% # none
+  # filter(area == "Lateral_Temporal") %>% #  88 Area_PHT_L 268 Area_PHT_R
+  filter(area == "TPO") %>% #
+  # filter(area == "Early_Auditory") %>%
+  # filter(area == "Auditory_Association") %>%
+  # filter(region_id %in% c(11,12,13)) %>%
+  select(region_id, region_name, `EmoVsNeut Coef`, EmoVsNeut_t, voxels)
+
+stats_emo004 %>%
+  # filter(area == "Ventral_Stream_Visual") %>% # none
+  # filter(area == "MT + _Complex") %>% # 18 Area_FST_L ,  24 Area_PH_L, 19 Area_Lateral_Occipital_1_L, 20 Area_Lateral_Occipital_2_L, 21 Area_Lateral_Occipital_3_L
+  # filter(area == "Medial_Temporal") %>% # none
+  # filter(area == "Lateral_Temporal") %>% #  88 Area_PHT_L 268 Area_PHT_R
+  filter(area == "TPO") %>% #
+  # filter(area == "Early_Auditory") %>%
+  # filter(area == "Auditory_Association") %>%
+  # filter(region_id %in% c(11,12,13)) %>%
+  select(region_id, region_name, `EmoVsNeut Coef`, EmoVsNeut_t, voxels)
+
+stats_emo005 %>%
   # filter(area == "Ventral_Stream_Visual") %>% # none
   # filter(area == "MT + _Complex") %>% # 18 Area_FST_L ,  24 Area_PH_L, 19 Area_Lateral_Occipital_1_L, 20 Area_Lateral_Occipital_2_L, 21 Area_Lateral_Occipital_3_L
   # filter(area == "Medial_Temporal") %>% # none
@@ -155,6 +243,27 @@ lateral_occipital_emo003 <- as.matrix(roi_emo003[, c(
 )]) %*%
   lat_occ_total_voxel$percent_total_voxels
 
+lateral_occipital_emo004 <- as.matrix(roi_emo004[, c(
+  18,
+  198,
+  24,
+  204,
+  88,
+  268
+)]) %*%
+  lat_occ_total_voxel$percent_total_voxels
+
+
+lateral_occipital_emo005 <- as.matrix(roi_emo005[, c(
+  18,
+  198,
+  24,
+  204,
+  88,
+  268
+)]) %*%
+  lat_occ_total_voxel$percent_total_voxels
+
 
 write.table(
   t(lateral_occipital_emo001),
@@ -176,6 +285,21 @@ write.table(
   col.names = F,
   quote = F,
   file = "/home/andrewfarkas/Research_data/multimodal/emoclips/processed/lateral_occipital_emo003.1D"
+)
+write.table(
+  t(lateral_occipital_emo004),
+  row.names = F,
+  col.names = F,
+  quote = F,
+  file = "/home/andrewfarkas/Research_data/multimodal/emoclips/processed/lateral_occipital_emo004.1D"
+)
+
+write.table(
+  t(lateral_occipital_emo005),
+  row.names = F,
+  col.names = F,
+  quote = F,
+  file = "/home/andrewfarkas/Research_data/multimodal/emoclips/processed/lateral_occipital_emo005.1D"
 )
 
 lat_occ_reml_stats <- data.frame(
@@ -262,6 +386,48 @@ lat_occ_reml_stats <- data.frame(
     0.265432,
     2.94967,
     8.70057
+  ),
+  emo004_values = c(
+    0.773444,
+    0.135428,
+    1.43705,
+    2.06511,
+    -0.0377899,
+    -0.400646,
+    0.160517,
+    0.0124185,
+    0.130759,
+    0.0170979,
+    0.111713,
+    1.00135,
+    1.0027,
+    0.173218,
+    1.34581,
+    1.81121,
+    0.0502084,
+    0.388218,
+    0.150713
+  ),
+  emo005_values = c(
+    28.7099,
+    0.574421,
+    7.02817,
+    49.3952,
+    0.192133,
+    2.32131,
+    5.38849,
+    0.572917,
+    6.91174,
+    47.7721,
+    0.381536,
+    4.02221,
+    16.1782,
+    0.382288,
+    3.51116,
+    12.3283,
+    0.380784,
+    3.47733,
+    12.0918
   )
 )
 
@@ -339,6 +505,11 @@ lateral_occ_d <- lateral_occ_result$group_test_statistic /
   sqrt(lateral_occ_k)
 
 lateral_occ_d
+
+
+# Optional Hedges correction using df = k - 1 for one-sample SMD intuition
+J <- 1 - 3 / (4 * (lateral_occ_k - lateral_occ_p) - 1)
+g <- lateral_occ_d * J
 
 
 Amygdala_L_beta <- c(0.0876498, 0.00892329, -0.0722916)
